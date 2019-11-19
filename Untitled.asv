@@ -1,9 +1,8 @@
 % ********************* Define transmitted signal *************************
 N=100; % Number of bits , size of transmitted signal x_inp=[x_1 x_2 ... x_N] 
 x_inp = randi([0,1],1,N)%(1,N);  % binary signal 0 or 1 % message to be transmitted
-preamble_N = 20;
-% preamble = randi([0,1],1,preamble_N)
-preamble = [0,1,0,0,1,1,1,0,1,1,0,1,0,1,0,1,1,0,1,0];
+preamble_N = 10;
+preamble = randi([0,1],1,preamble_N)
 N = preamble_N + N;
 x_inp = [x_inp preamble];
 % x_inp = [x_inp  preamble];
@@ -98,5 +97,5 @@ axis([ 0 Tb*length(x_out) -0.5 1.5]);
 ylabel('Amplitude(volt)');
 xlabel(' Time(sec)');
 title('Output signal as digital signal');
-audiowrite('kayit.wav',xx_bit,1/Tb);
+audiowrite('kay?t.wav',y,Fs);
 % **************************** end of program *****************************
