@@ -1,20 +1,22 @@
 % ********************* Define transmitted signal *************************
 N=100; % Number of bits , size of transmitted signal x_inp=[x_1 x_2 ... x_N] 
-x_inp = randi([0,1],1,N)%(1,N);  % binary signal 0 or 1 % message to be transmitted
-preamble_N = 10;
-preamble = randi([0,1],1,preamble_N)
-N = preamble_N + N;
+x_inp = randi([0,1],1,N);%(1,N);  % binary signal 0 or 1 % message to be transmitted
+preamble_N = 20;
+% preamble = randi([0,1],1,preamble_N)
+preamble = [0,1,0,0,1,1,1,0,1,1,0,1,0,1,0,1,1,0,1,0];
+N = preamble_N + N;     % toplam number of bits becomes 120
 x_inp = [x_inp preamble];
 % x_inp = [x_inp  preamble];
-Tb=0.0001; % bit period (second)   
+Tb=0.0001; % bit period (second)   % total duration of signal becomes 120 * Tb
 % ********************* Represent input signal as digital signal ****
 x_bit=[]; 
 % L = 100;
-nb=100; % bbit/bit
+nb=100; % bbit/bit       % heralde samples/bit ya. Total number of samples becomes N * nb = 12000
+                            
 for n=1:1:N   % 
-    if x_inp(n)==1;  % 
+    if x_inp(n)==1 
        x_bitt=ones(1,nb);
-    else x_inp(n)==0;
+    else x_inp(n)
         x_bitt=zeros(1,nb);
     end
      x_bit=[x_bit x_bitt];		% her loop'tan sonra üstüne ekliyo
@@ -67,7 +69,7 @@ y=h.*x+w;
 y_dem=[];
 for n=t2L:t2L:length(y)
   t=Tb/nb:Tb/nb:Tb;
-  c=cos(2*pi*fc*t); % carrier siignal 
+  c=cos(2*pi*fc*t); % carrier signal 
   y_dem0=c.*y((n-(t2L-1)):n);
   t4=Tb/nb:Tb/nb:Tb;
   z=trapz(t4,y_dem0); % intregation 
@@ -82,10 +84,10 @@ end
 x_out=y_dem; % output signal;
 % *************** Represent output signal as digital signal ***************
 xx_bit=[];
-for n=1:length(x_out);
-    if x_out(n)==1;
+for n=1:length(x_out)
+    if x_out(n)==1
        xx_bitt=ones(1,nb);
-    else x_out(n)==0;
+    else x_out(n)
         xx_bitt=zeros(1,nb);
     end
      xx_bit=[xx_bit xx_bitt];
@@ -97,5 +99,4 @@ axis([ 0 Tb*length(x_out) -0.5 1.5]);
 ylabel('Amplitude(volt)');
 xlabel(' Time(sec)');
 title('Output signal as digital signal');
-audiowrite('kay?t.wav',y,Fs);
 % **************************** end of program *****************************
