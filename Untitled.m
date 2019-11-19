@@ -13,7 +13,7 @@ for n=1:1:N   %
     else x_inp(n)==0;
         x_bitt=zeros(1,nb);
     end
-     x_bit=[x_bit x_bitt];
+     x_bit=[x_bit x_bitt];		% her loop'tan sonra üstüne ekliyo
 end
 % x_bit = upsample(x_inp,L);
 t1=Tb/nb:Tb/nb:nb*N*(Tb/nb); % time of the signal 
