@@ -1,18 +1,17 @@
 % ********************* Transmitted signal x ******************************
 % x=x_mod;
-[y,Fs] = audioread('Ses002.amr');
+[y,Fs] = audioread('kayit.wav');
 time=(1:length(y))/Fs;
-x=y;
 plot(time,y);
+% ylim([-0.2 1.2]);
 
 figure;
-nb=1/Fs;
-% Tb = ;
+Tb = 1/Fs;
 % ********************* Channel model h and w *****************************
 % h=1; % Fading 
 % w=0; % Noise
 % ********************* Received signal y *********************************
-% y=h.*x+w;
+% y=h.*y+w;
 % ********************* Define BPSK Demodulation **************************
 y_dem=[];
 for n=t2L:t2L:length(y)

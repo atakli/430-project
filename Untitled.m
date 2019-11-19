@@ -68,7 +68,7 @@ y=h.*x+w;
 y_dem=[];
 for n=t2L:t2L:length(y)
   t=Tb/nb:Tb/nb:Tb;
-  c=cos(2*pi*fc*t); % carrier siignal 
+  c=cos(2*pi*fc*t); % carrier signal 
   y_dem0=c.*y((n-(t2L-1)):n);
   t4=Tb/nb:Tb/nb:Tb;
   z=trapz(t4,y_dem0); % intregation 
@@ -98,5 +98,4 @@ axis([ 0 Tb*length(x_out) -0.5 1.5]);
 ylabel('Amplitude(volt)');
 xlabel(' Time(sec)');
 title('Output signal as digital signal');
-audiowrite('kayit.wav',xx_bit,1/Tb);
 % **************************** end of program *****************************
