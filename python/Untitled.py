@@ -54,13 +54,14 @@ for i in np.arange(0,N,1):					# bu for'u np.where ve np.cos ile yapabilirim tah
 		x_mod0 = Ac*np.cos(2*pi*fc*t2+fi2)	# modulation signal with carrier signal 2
 	x_mod = np.append(x_mod,x_mod0)
 
-# end
-# t3=Tb/nb:Tb/nb:Tb*N;
+t3 = np.arange(0,Tb*N,Tb/nb)
 # subplot(3,1,2);
-# plot(t3,x_mod);
-# xlabel('Time(sec)');
-# ylabel('Amplitude(volt)');
-# title('Signal of	BASK modulation ');
+# pdb.set_trace()
+plt.plot(x_mod,lineWidth=2);
+plt.xlabel('Time(sec)')
+plt.ylabel('Amplitude(volt)')
+plt.title('Signal of BPSK modulation ')
+plt.show()
 
 # sound(x_mod)
 
