@@ -6,8 +6,8 @@ from scipy.io.wavfile import read
 pi = np.pi
 """ ********************* Transmitted signal x ****************************** """
 # x=x_mod
-[y,Fs] = read('test.wav')
-time=(1:length(y))/Fs
+Fs,y = read('test.wav')
+time = np.arange(1,len(y)+1)/Fs
 plot(time,y)
 # ylim([-0.2 1.2])
 
