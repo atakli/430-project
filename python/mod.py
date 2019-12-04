@@ -2,6 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import pdb
 from mplcursors import cursor as cs
+from scipy.io.wavfile import write
 pi = np.pi
 """ Define transmitted signal """
 N=100# % Number of bits , size of transmitted signal x_inp=[x_1 x_2 ... x_N] 
@@ -28,15 +29,17 @@ t1 = np.arange(0,nb*N*(Tb/nb),Tb/nb)		# time of the signal
 # pdb.set_trace()
 # f1 = figure(1);
 # set(f1,'color',[1 1 1]);
-# plt.subplots(3,1,1); 
-plt.plot(t1,x_bit,lineWidth=2)
+fig,(input, bpsk, dbpsk) = plt.subplots(3,1)
+plt.subplots_adjust(hspace = 0.50)#, left=0.05,right=0.2)
+input.plot(t1,x_bit,lineWidth=2)
 plt.grid()
-cs()
+cs(multiple=True)
 # axis([ 0 Tb*N -0.5 1.5]);
-plt.ylabel('Amplitude(volt)');
-plt.xlabel(' Time(sec)');
-plt.title('Input signal as digital signal')
-plt.show()
+input.set(ylabel='Amplitude (Volts)')
+input.set_title('Input signal as digital signal')
+input.set_ylim(-1,2)
+plt.xlabel('Time (sec)')
+# plt.show()
 
 """ Define BFSK Modulation """
 Ac = 5	# Amplitude of carrier signal
@@ -56,11 +59,12 @@ for i in np.arange(0,N,1):					# bu for'u np.where ve np.cos ile yapabilirim tah
 
 t3 = np.arange(0,Tb*N,Tb/nb)
 # subplot(3,1,2);
+bpsk.plot(x_mod,lineWidth=2)
+bpsk.set(ylabel='Amplitude (Volts)')
+bpsk.set_title('Signal of BPSK modulation ')
 # pdb.set_trace()
-plt.plot(x_mod,lineWidth=2);
-plt.xlabel('Time(sec)')
-plt.ylabel('Amplitude(volt)')
-plt.title('Signal of BPSK modulation ')
+bunu_yaz = np.int16(x_mod/np.max(np.abs(x_mod)) * 32767)
+write('test.wav',int(1/Tb),bunu_yaz)
 plt.show()
 
 # sound(x_mod)
