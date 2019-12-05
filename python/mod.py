@@ -50,6 +50,7 @@ fi1 = 0	   # carrier phase for bit 1
 fi2 = pi	# carrier phase for bit 0
 t2 = np.arange(0,Tb,Tb/nb)  # ya saçmalığa bak son elemanı Tb olmasın dedim ne olmuş: 9.999999999999999e-05
 t2 = t2[:-1]            # burda düzelttim o durumu 
+t2ne = np.arange(0, (nb * N) * Tb, Tb)
 len_t2 = len(t2)
 x_mod = np.empty(0)
 for i in np.arange(0,N,1):					# bu for'u np.where ve np.cos ile yapabilirim tahmin ediyorum
@@ -58,7 +59,7 @@ for i in np.arange(0,N,1):					# bu for'u np.where ve np.cos ile yapabilirim tah
 	else:
 		x_mod0 = Ac*np.cos(2*pi*fc*t2+fi2)	# modulation signal with carrier signal 2
 	x_mod = np.append(x_mod,x_mod0)
-
+#x_modne = np.cos(np.dot(2 * pi * fc, t2ne) + pi * (x_inp - 1) + pi / 4)
 t3 = np.arange(0,Tb*N,Tb/nb)
 # subplot(3,1,2);
 bpsk.plot(x_mod,lineWidth=2)
