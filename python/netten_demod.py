@@ -10,15 +10,21 @@ import matplotlib.pyplot as plt
 import matplotlib
 import scipy.signal as signal
 #import math
-from scipy.io.wavfile import read
-
+from scipy.io.wavfile import read,write
+quantization_level = 16
 zhfont1 = matplotlib.font_manager.FontProperties(fname = 'C:\Windows\Fonts\simsun.ttc')
-Fs,y = read(r'C:\Users\Emre\Desktop\14.08.09_the_mechanic\ders\430\proje\430-project\python\noised.wav')
+Fs,y = read(r'C:\Users\Emre\Desktop\14.08.09_the_mechanic\ders\430\proje\430-project\python\bpsk_de.wav')
+
+#bits_list = []
+#for index in range():
+#    bits = [index & (2 ** k) for k in range(8)]
+#    bits_list.append(tuple((1 if b else 0) for b in bits))
+#    to_byte = dict((bits, i) for i, bits in enumerate(bits_list))
 
 #time = np.arange(0,len(y))/Fs
 #plt.plot(time,y)
-ts = np.arange(0, len (y) / Fs, 1 / Fs)
-fc = 4000
+ts = np.arange(0, len(y) / Fs, 1 / Fs)
+fc = 400
 coherent_carrier = np.cos(2 * pi * fc * ts)
  # ,passband is [2000,6000]
 [b11,a11] = signal.ellip(5, 0.5, 60, [2000 * 2 / 80000, 6000 * 2 / 80000], btype = 'bandpass', analog = False, output = 'ba')
@@ -63,4 +69,7 @@ bx2.set_title('signal after BPSK signal sampling decision', fontproperties = zhf
 #plt.axis([0, size, -0.5, 1.5])
 plt.plot(detection_bpsk, 'r')
 plt.tight_layout()
-plt.show()
+#plt.show()
+packed_detection_bpsk = np.packbits(detection_bpsk)
+#bunu_yaz = np.int16(detection_bpsk/np.max(np.abs(detection_bpsk)) * 2**(quantization_level-1))
+write('dbpsk.wav',Fs,packed_detection_bpsk)
