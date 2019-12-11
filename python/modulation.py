@@ -3,7 +3,7 @@ from math import pi,floor
 import matplotlib.pyplot as plt
 import matplotlib,time
 from scipy.io.wavfile import write,read
-from den import filter,freq_resp
+from auxiliary_module import filter,freq_resp
 
 def main():
 	Fs,y_den = read(r'C:\Users\Emre\Desktop\14.08.09_the_mechanic\ders\430\proje\430-project\python\den.wav')

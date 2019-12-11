@@ -4,7 +4,7 @@ from math import pi,floor
 import matplotlib.pyplot as plt
 import matplotlib
 from scipy.io.wavfile import write,read
-from den import filter,freq_resp
+from auxiliary_module import filter,freq_resp
 Fs,bpsk = read('bpsk_de2.wav')
 fc = 4000
 nb = 10
