@@ -1,29 +1,20 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Sun Dec  8 17:16:56 2019
-@author: Emre
-"""
 import time
 import numpy as np
 from math import pi,floor
 import matplotlib.pyplot as plt
 import matplotlib
 from scipy.io.wavfile import write,read
-from den import filter,freq_resp		# sadece importlar 5.7 sec
+from den import filter,freq_resp
 Fs,bpsk = read('bpsk_de2.wav')
 fc = 4000
 nb = 10
 bpsk = bpsk[:(len(bpsk) - (len(bpsk) % nb))]
 ts = np.arange(0, len(bpsk) / Fs, 1 / Fs)
 coherent_carrier = np.cos(np.dot(2 * pi * fc, ts))
-#bandpass_out = filter(bpsk,low=2000,high=6000,typ='bandpass')
-
 coherent_demod = bpsk * (coherent_carrier * 2)
 def main(high=400,low=200):
-	
 	lowpass_out = filter(coherent_demod,high=high)
 	filter_out = filter(lowpass_out,low=low,typ='highpass')
-	# filter_out = lowpass_out
 
 	filter_out = filter_out.reshape((int(len(filter_out)/nb),nb))
 	tempF = np.sum(filter_out,axis=1)
@@ -33,7 +24,6 @@ def main(high=400,low=200):
 	#bunu_yaz = np.int16(detection_bpsk/np.max(np.abs(detection_bpsk)) * 2**(quantization_level-1))
 	packed_detection_bpsk.tofile('dbpsk.wav')
 	dbpsk1 = np.fromfile('dbpsk.wav',dtype = "int16")
-	write('dbpsk1.wav',Fs,dbpsk1)					# son kısım 0.015 saniye ama gereksiz kısım siinebilir
-	# print('son: ',time.time()-bas)
+	write('dbpsk1.wav',Fs,dbpsk1)
 if __name__ == '__main__':
 	main()
