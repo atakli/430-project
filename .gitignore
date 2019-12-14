@@ -1,3 +1,4 @@
 python/*.pyc
 python/bpsk_de.wav
 python/bpsk_de2.wav
+python/__pycache__

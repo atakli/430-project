@@ -1,10 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Sun Dec  8 10:25:55 2019
-
-@author: Emre
-"""
-
 import numpy as np
 from math import pi
 import matplotlib.pyplot as plt
@@ -36,14 +29,3 @@ def filter(sig,order=5,low=50,high=200,plot=False,typ='lowpass'):
     if plot == True:
         plt.plot(result)    
     return result
-def deneme():
-    ts = np.arange(0, 200 / Fs, 1 / Fs)
-    carrier = np.cos(2 * pi * 4000 * ts )
-    message = np.cos(2 * pi * 400 * ts )
-    modulated_signal = carrier * message # carrier ve message'in frekanslarının fark ve toplamlarından oluşuyo
-    demodulated_signal = carrier * modulated_signal
-    freq_resp(demodulated_signal,label='demodulated signal')
-    filtered_sig = filter(demodulated_signal,plot=False)
-    freq_resp(filtered_sig,label='filtered hali')
-#plt.legend()
-#plt.plot(ts,modulated_signal)

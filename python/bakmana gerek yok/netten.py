@@ -1,12 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Sun Dec  8 13:31:31 2019
-
-@author: Emre
-"""
-
-# -*- coding:utf-8 -*-
-
 import numpy as np
 from math import pi
 import matplotlib.pyplot as plt
@@ -32,7 +23,6 @@ m = a[t_floor]
 fig = plt.figure()
 ax1 = fig.add_subplot(3, 1, 1)
 
- # set_titleChinese garbled
 zhfont1 = matplotlib.font_manager.FontProperties(fname = 'C:\Windows\Fonts\simsun.ttc')
 
 ax1.set_title('Generate random n-bit binary signal', fontproperties = zhfont1, fontsize = 20)

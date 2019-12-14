@@ -3,7 +3,7 @@ from math import pi,floor
 import matplotlib.pyplot as plt
 import matplotlib,time
 from scipy.io.wavfile import write,read
-from den import filter,freq_resp
+from auxiliary_module import filter,freq_resp
 
 def main():
 	Fs,y_den = read(r'C:\Users\Emre\Desktop\14.08.09_the_mechanic\ders\430\proje\430-project\python\den.wav')
@@ -18,17 +18,30 @@ def main():
 	t = np.arange(0, len(y_bytes), sampling_t)
 	t_floor = np.int64(np.floor(t))
 	m = y_bytes[t_floor]
+	m = m[:(len(m) - (len(m) % 2))]
+	m = m.reshape(int(len(m)/2),2)
 	quantization_level = 16
 	fc = 4000
 	ts = np.arange(0, 1 / sampling_t * len(y_bytes) / Fs, 1 / Fs)
-	bpsk = np.cos(np.dot(2 * pi * fc, ts) + pi * (m - 1))
+	phase = np.empty(0)
+	# __import__('pdb').set_trace()
+	for i in m:
+		if i == [0,1]:
+			phase = np.append(phase,0)
+		elif i == [1,0]:
+			phase = np.append(phase,pi/2)
+		elif i == [1,1]:
+			phase = np.append(phase,-pi/2)
+		else:
+			phase = np.append(phase,pi)
+		
+	bpsk = np.cos(np.dot(2 * pi * fc, ts) + phase)
 	bunu_yaz = np.int16(bpsk/np.max(np.abs(bpsk)) * 2**(quantization_level-1))
 	write('bpsk_de.wav',Fs,bunu_yaz)
 	
 def random():
 	
 	size = 10
-	#sampling_t = 1/Fs
 	sampling_t = 0.1
 	nb = 1 / sampling_t
 	quantization_level = 16 
@@ -55,7 +68,5 @@ def random():
 	bpsk = np.cos(np.dot(2 * pi * fc, ts) + pi * (m - 1))
 	 # AWGN noise
 	noise_bpsk = awgn(bpsk, 5)
-	yaz_ve_cal(quantization_level,noise_bpsk,Fs)
-	return m
 if __name__ == '__main__':
 	main()

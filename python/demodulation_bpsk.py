@@ -1,10 +1,13 @@
-import time
 import numpy as np
 from math import pi,floor
 import matplotlib.pyplot as plt
-import matplotlib
 from scipy.io.wavfile import write,read
-from den import filter,freq_resp
+from auxiliary_module import filter,freq_resp
+
+preamble = np.array([0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 0, 0, 0, 1, 0, 1, 0, 1,
+0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0,
+1, 1, 1, 0, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 0, 1, 1, 1, 0, 0, 0, 0],dtype=np.uint8)
+# bpsk = LPC_rx_s('bpsk_de2.wav')
 Fs,bpsk = read('bpsk_de2.wav')
 fc = 4000
 nb = 10
