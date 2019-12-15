@@ -1,6 +1,7 @@
 from udecode_uencode import udecode
 from func_a_coeff_from_parcor import func_a_coeff_from_parcor
 from math import ceil,floor
+from f_DECODER import f_DECODER
 def LPC_rx_s(data_frame):
 	return synth_speech_agr
 data_frame=uint16(data_frame)	# 65536'den büyük bi eleman varsa ne olacak?
@@ -22,7 +23,7 @@ if isempty(data_frame):
     break
 end
 length_in_sec_bin_rec = data_frame[:10]
-length_in_sec_rec = double(bi2de(length_in_sec_bin_rec.'))/100;
+length_in_sec_rec = np.double(bi2de(length_in_sec_bin_rec.T)) / 100
 if length_in_sec_rec < 1:
     kk = 1
 length_x = length_in_sec_rec * fs
@@ -104,46 +105,38 @@ for b in range(floor(length_x/frame_length)):
 #         voiced_b = voiced(b);
 #     gain(b) = f_GAIN (e, voiced_b, pitch_plot_b);
 
-
-
 gain_elements_decoded = np.zeros((1,frame_length * ceil(length_x/frame_length)))
 
-
 gain_elements_encoded_reshaped = gain_elements_encoded_bit_single.reshape(12,length_voiced_elements).T
-gain_elements_encoded_rec = bi2de(gain_elements_encoded_reshaped)
+ge = gain_elements_encoded_rec = bi2de(gain_elements_encoded_reshaped)
+len_gain_elements_encoded_rec = len(ge) if len(ge) > 1 else ge.shape[1]
+if gain_elements_decoded.shape[1] / frame_length > len_gain_elements_encoded_rec:
+# mesela (1,7)'lik bir array ise len 1 veriyor. sahpe'i (7,) ise  o zaman matkub sonucu verir ancak
+	gain_elements_decoded[:-frame_length:frame_length] = udecode(gain_elements_encoded_rec,6) * gain_elements_max_dec
+else:
+	gain_elements_decoded[::frame_length] = udecode(gain_elements_encoded_rec,12) * gain_elements_max_dec
 
-if length(gain_elements_decoded)/frame_length>length(gain_elements_encoded_rec)
-gain_elements_decoded(1:frame_length:end-frame_length)=udecode(gain_elements_encoded_rec,6)*gain_elements_max_dec;
-else
-gain_elements_decoded(1:frame_length:end)=udecode(gain_elements_encoded_rec,12)*gain_elements_max_dec;
-end
+binary_pitch_plot_reshaped = binary_pitch_plot_single_dec.reshape(10,length_voiced_elements).T
 
+binary_pitch_plot_decoded = bi2de(binary_pitch_plot_reshaped);
 
+pitch_unique_dec_dbl = np.double(pitch_unique_decoded)				# double np.double'a mı denk, kontrol et
+binary_pitch_plot_decoded_mapped = pitch_unique_dec_dbl(binary_pitch_plot_decoded);
 
-binary_pitch_plot_reshaped=reshape(binary_pitch_plot_single_dec,10,length_voiced_elements).';
-
-binary_pitch_plot_decoded=bi2de(binary_pitch_plot_reshaped);
-
-pitch_unique_dec_dbl=double(pitch_unique_decoded);
-binary_pitch_plot_decoded_mapped=pitch_unique_dec_dbl(binary_pitch_plot_decoded);
-
-binary_pitch_plot_decoded_mapped_rep=repelem(binary_pitch_plot_decoded_mapped,frame_length);
-
-
+binary_pitch_plot_decoded_mapped_rep = repelem(binary_pitch_plot_decoded_mapped,frame_length);
 
 synth_speech = f_DECODER (aCoeff_quant, binary_pitch_plot_decoded_mapped_rep, voiced, gain_elements_decoded);
 
-
-%RESULTS,
-% de2beep
-
-% disp('Press a key to play the original sound!');
-% pause;
-% soundsc(x, fs);
-% 
-% disp('Press a key to play the LPC compressed sound!');
-% pause;
-synth_speech_agr=[synth_speech_agr synth_speech]; 
+#RESULTS,
+# de2beep
+#
+# disp('Press a key to play the original sound!');
+# pause;
+# soundsc(x, fs);
+# 
+# disp('Press a key to play the LPC compressed sound!');
+# pause;
+synth_speech_agr = np.append(synth_speech_agr,synth_speech)
 
 end
 end
