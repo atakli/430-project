@@ -22,11 +22,9 @@ t = x.size / fs
 # sprintf('Processing the wavefile "%s"', inpfilenm)
 # sprintf('The wavefile is  %3.2f   seconds long', t)
 
-
-# THE ALGORITHM STARTS HERE,
+# THE ALGORITHM STARTS HERE
 M = 10  # prediction order
 [parcor, aCoeff, pitch_plot, voiced, gain] = f_ENCODER(x, fs, M)  # pitch_plot is pitch periods
-
 
 fsize = 60e-3    # frame size
 frame_length = round(fs * fsize)
@@ -43,14 +41,14 @@ gain_elements_max_scaled=round(gain_elements_max*100);
 gain_elements_max_bin=de2bi(gain_elements_max_scaled,7);
 length_in_sec_scaled_binary=de2bi(round(t*100),10);
 
-pitch_unique=unique(pitch_plot_elements);
-[~,idx] = ismember(pitch_plot_elements,pitch_unique);
-binary_pitch_plot=de2bi(idx,10).';
-binary_pitch_plot_single=binary_pitch_plot(:);
-pitch_unique_binary=de2bi(pitch_unique,10).';
-pitch_unique_binary_vec=pitch_unique_binary(:);
-pitch_unique_binary_vec_length=length(pitch_unique_binary_vec);
-pitch_unique_binary_vec_length_binary=de2bi(pitch_unique_binary_vec_length,10).';
+pitch_unique = unique(pitch_plot_elements)
+[~,idx] = ismember(pitch_plot_elements,pitch_unique)
+binary_pitch_plot = de2bi(idx,10).T
+binary_pitch_plot_single = binary_pitch_plot.copy()
+pitch_unique_binary = de2bi(pitch_unique,10).T
+pitch_unique_binary_vec = pitch_unique_binary.copy()
+pitch_unique_binary_vec_length = pitch_unique_binary_vec.size
+pitch_unique_binary_vec_length_binary = de2bi(pitch_unique_binary_vec_length,10).T
 
 # Gain quantization
 # gain_elements_mapped=round((gain_elements_normalized) * 2^5);
@@ -90,8 +88,8 @@ a_coeff_all_decoded = son[0:11,:]					# son[1:11] de aynı şey python'da, ama m
 
 	
 
-data_frame_agr=[data_frame_agr; data_frame];
-kk=kk+1;
+data_frame_agr = np.append(data_frame_agr,data_frame)
+kk = kk + 1
 end
 
 end
