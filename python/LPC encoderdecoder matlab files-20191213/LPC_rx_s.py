@@ -60,7 +60,7 @@ def LPC_rx_s(data_frame):
 
 		acn = 'a_coeff_norm_'
 		ebs = '_encoded_bit_single'
-		for i,s in zip(range(1,11,1),[5,5,5,5,4,4,4,4,3,2]):
+		for i,s in zip(range(1,11),[5,5,5,5,4,4,4,4,3,2]):
 			globals()[acn+str(i)+ebs] = data_frame[:length_voiced_elements * s]
 			data_frame = np.delete(data_frame,np.arange(length_voiced_elements * s))				#bu ne arkadaş ya, saçma değil mi
 
@@ -83,7 +83,7 @@ def LPC_rx_s(data_frame):
 		for i in range(1,11,1):
 			iki = [globals()[acn+str(i)+'_decoded']
 			son = np.concatenate(son,iki)					# doğru axis olacak mı bilmiyorum, cmd'de 1,4lük matrixlerle denedim doğru oldu
-		a_coeff_all_decoded = son[0:11,:]					# son[1:11] de aynı şey python'da, ama matlabda farklı
+		a_coeff_all_decoded[0:11,:] = son					# son[1:11] de aynı şey python'da, ama matlabda farklı
 
 		parcor_all_decoded_vec = a_coeff_all_decoded.reshape(1, a_coeff_all_decoded.shape[0] * a_coeff_all_decoded.shape[1])
 
