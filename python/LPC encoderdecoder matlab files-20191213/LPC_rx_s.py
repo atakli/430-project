@@ -2,15 +2,16 @@ from udecode_uencode import udecode
 from func_a_coeff_from_parcor import func_a_coeff_from_parcor
 from math import ceil,floor
 from f_DECODER import f_DECODER
+import numpy as np
 def LPC_rx_s(data_frame):
-
-	data_frame=uint16(data_frame)	# 65536'den büyük bi eleman varsa ne olacak?
+# len ve size vs'leri kontrol et 
+	data_frame = np.uint16(data_frame)	# 65536'den büyük bi eleman varsa ne olacak?
 	fs = 8000		# Sound sampling rate (not the sampling rate of the receiver, sampling rate of the recorded sound as a source file).
 	fsize = 60e-3	# frame size	# BU NE?
 	frame_length = round(fs * fsize)
 
 	kk = 0
-	synth_speech_agr = []
+	synth_speech_agr = np.zeros(0)
 	data_frame_agr = []
 
 	variables = dir()[7:]							# esnek olmayabilir her zaman çalışmayabilir şüpheliyim
@@ -20,9 +21,8 @@ def LPC_rx_s(data_frame):
 																				# ama detaylı incelemedim
 
 		# Decoding
-		if isempty(data_frame):
+		if data_frame.size > 0:
 			break
-		end
 		length_in_sec_bin_rec = data_frame[:10]
 		length_in_sec_rec = np.double(bi2de(length_in_sec_bin_rec.T)) / 100
 		if length_in_sec_rec < 1:
@@ -108,10 +108,8 @@ def LPC_rx_s(data_frame):
 		gain_elements_decoded = np.zeros((1,frame_length * ceil(length_x/frame_length)))
 
 		gain_elements_encoded_reshaped = gain_elements_encoded_bit_single.reshape(12,length_voiced_elements).T
-		ge = gain_elements_encoded_rec = bi2de(gain_elements_encoded_reshaped)
-		len_gain_elements_encoded_rec = len(ge) if len(ge) > 1 else ge.shape[1]
-		if gain_elements_decoded.shape[1] / frame_length > len_gain_elements_encoded_rec:
-		# mesela (1,7)'lik bir array ise len 1 veriyor. sahpe'i (7,) ise  o zaman matkub sonucu verir ancak
+		gain_elements_encoded_rec = bi2de(gain_elements_encoded_reshaped)
+		if gain_elements_decoded.size / frame_length > gain_elements_encoded_rec.size:		
 			gain_elements_decoded[:-frame_length:frame_length] = udecode(gain_elements_encoded_rec,6) * gain_elements_max_dec
 		else:
 			gain_elements_decoded[::frame_length] = udecode(gain_elements_encoded_rec,12) * gain_elements_max_dec
