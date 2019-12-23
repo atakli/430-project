@@ -3,7 +3,7 @@ from math import pi,floor
 import matplotlib.pyplot as plt
 from scipy.io.wavfile import write,read
 from auxiliary_module import filter,freq_resp
-
+# pip install sympy,opencv-python,sklearn,scikit-image,scikit-learn,pytube,PyQt4,PyQt5,Pillow,pandas,Kivy,jupyter,Cython
 def main():
 	# y_bytes = LPC_tx_s('den.wav')
 	Fs,y_den = read('den.wav')
@@ -15,10 +15,10 @@ def main():
 	preamble = np.array([0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 0, 0, 0, 1, 0, 1, 0, 1,
 	0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0,
 	1, 1, 1, 0, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 0, 1, 1, 1, 0, 0, 0, 0],dtype=np.uint8)
-	y_bytes = np.append(y_bytes,preamble)
+	y_bytes = np.append(preamble,y_bytes)
 	sampling_t = 0.1
-	__import__('pdb').set_trace()
-	nb = int(1/sampling_t)
+	# __import__('pdb').set_trace()
+#	nb = int(1/sampling_t)
 	t = np.arange(0, len(y_bytes), sampling_t)
 	t_floor = np.int64(np.floor(t))
 	m = y_bytes[t_floor]

@@ -3,18 +3,30 @@ from math import pi,floor
 import matplotlib.pyplot as plt
 from scipy.io.wavfile import write,read
 from auxiliary_module import filter,freq_resp
-
+from collections import Counter
+from tqdm import tqdm
+from cv2 import matchTemplate
+import cv2
+def detect_preamble(arr,seq):
+	S = matchTemplate(arr.astype('uint8'),seq.astype('uint8'),cv2.TM_SQDIFF)
+	__import__('pdb').set_trace()
+	thresh = 10
+	return np.where(S.ravel() < thresh)
 preamble = np.array([0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 0, 0, 0, 1, 0, 1, 0, 1,
 0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0,
 1, 1, 1, 0, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 0, 1, 1, 1, 0, 0, 0, 0],dtype=np.uint8)
 # bpsk = LPC_rx_s('bpsk_de2.wav')
-Fs,bpsk = read('bpsk_de2.wav')
+Fs,bpsk = read('bpsk_de.wav')
 fc = 4000
 nb = 10
 bpsk = bpsk[:(len(bpsk) - (len(bpsk) % nb))]
 ts = np.arange(0, len(bpsk) / Fs, 1 / Fs)
 coherent_carrier = np.cos(np.dot(2 * pi * fc, ts))
 coherent_demod = bpsk * (coherent_carrier * 2)
+__import__('pdb').set_trace()
+coherent_demod_bytes = np.unpackbits(np.uint8(coherent_demod))
+index = detect_preamble(coherent_demod_bytes,preamble)
+coherent_demod = coherent_demod[index:]
 def main(high=400,low=200):
 	lowpass_out = filter(coherent_demod,high=high)
 	filter_out = filter(lowpass_out,low=low,typ='highpass')

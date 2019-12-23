@@ -2,12 +2,12 @@
 
 def func_vd_zc(y):
 	ZC = 0
-	for n in range(len(y)):
-		if n+2 > length(y):
+	for n in range(y.size):
+		if n+2 > y.size:
 			break
-		ZC += (1./2) .* abs(sign(y[n+1])-sign(y[n]))	# şu nokta meselesi ne ya
+		ZC += (1/2) * abs( sign( y[n+1] ) - sign( y[n] ) )	# şu nokta meselesi ne ya
 	return ZC
 
-ZC;													# bu ne olum
+# print('ZC from func_vd_zc: ',ZC)													# bu ne olum. gerek yok
 
 # çok mühim olmamakla beraber if yapacağına for n in range(len(y)-1) denebilir belki, incele
