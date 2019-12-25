@@ -92,7 +92,7 @@ def LPC_rx_s(data_frame):
 		#     y1=x(b:b+N);     %"b+N" denotes the end point of current frame.
 		#                 %"y" denotes an array of the data points of the current 
 		#                 %frame
-		#     y = filter([1 -.9378], 1, y1);  %pre-emphasis filtering
+		#     y = lfilter([1 -.9378], 1, y1);  %pre-emphasis filtering
 		# 
 		#     %aCoeff [LEVINSON-DURBIN METHOD];
 

@@ -66,7 +66,7 @@ end
 
 
 a_final=a((1:s),s)';
-est_y = filter([0 -a_final(2:end)],1,y);    #  = s^(n) with a cap on page 92 of the book
+est_y = lfilter([0 -a_final(2:end)],1,y);    #  = s^(n) with a cap on page 92 of the book
 e = y - est_y;      # supposed to be a white noise
 
 pg(M) = 10.*log10( (sum(y.^2)) ./ (sum(e.^2)) );       # prediction gain
