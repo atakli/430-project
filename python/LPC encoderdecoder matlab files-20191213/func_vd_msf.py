@@ -1,5 +1,5 @@
 #function of "voicingDetector_magnitude_sum_function__hamza"
-from scipy import signal
+from scipy.signal import butter,lfilter
 def func_vd_msf(y):
 	B,A = signal.butter(9,.33,'low')  #.5 or .33?	# heralde doğrudur hızlı kontrol ettim	
 	y1 = signal.lfilter(B,A,y)						

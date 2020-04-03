@@ -6,7 +6,7 @@ import numpy as np
 def LPC_rx_s(data_frame):
 # len ve size vs'leri kontrol et 
 	data_frame = np.uint16(data_frame)	# 65536'den büyük bi eleman varsa ne olacak?
-	fs = 8000		# Sound sampling rate (not the sampling rate of the receiver, sampling rate of the recorded sound as a source file).
+	fs = 8000	# Sound sampling rate (not the sampling rate of the receiver, sampling rate of the recorded sound as a source file)
 	fsize = 60e-3	# frame size	# BU NE?
 	frame_length = round(fs * fsize)
 
@@ -17,11 +17,10 @@ def LPC_rx_s(data_frame):
 	variables = dir()[7:]							# esnek olmayabilir her zaman çalışmayabilir şüpheliyim
 
 	while kk == 0:
-		clearvars -except kk synth_speech_agr fs data_frame frame_length		# bence buna gerek yok 
+		# clearvars -except kk synth_speech_agr fs data_frame frame_length		# bence buna gerek yok 
 																				# ama detaylı incelemedim
-
 		# Decoding
-		if data_frame.size > 0:
+		if len(data_frame) == 0:
 			break
 		length_in_sec_bin_rec = data_frame[:10]
 		length_in_sec_rec = np.double(bi2de(length_in_sec_bin_rec.T)) / 100
@@ -62,28 +61,28 @@ def LPC_rx_s(data_frame):
 		ebs = '_encoded_bit_single'
 		for i,s in zip(range(1,11),[5,5,5,5,4,4,4,4,3,2]):
 			globals()[acn+str(i)+ebs] = data_frame[:length_voiced_elements * s]
-			data_frame = np.delete(data_frame,np.arange(length_voiced_elements * s))				#bu ne arkadaş ya, saçma değil mi
+			data_frame = np.delete(data_frame,np.arange(length_voiced_elements * s))			#bu ne arkadaş ya, saçma değil mi
 
 		for i,s in zip(range(1,11,1),[5,5,5,5,4,4,4,4,3,2]):
 			globals()[acn+str(i)+ebs+'_reshaped'] = globals()[acn+str(i)+ebs].reshape(s,length_voiced_elements)
-			globals()[acn+str(i)+'_encoded'] = bi2de(globals()[acn+str(i)+'_encoded_bit_single_reshaped'].T).T			#bi2de
+			globals()[acn+str(i)+'_encoded'] = bi2de(globals()[acn+str(i)+'_encoded_bit_single_reshaped'].T).T		
 			
 		for i,s in zip(range(1,11,1),[5,5,5,5,4,4,4,4,3,2]):	
-			globals()[acn+str(i)+'_decoded'] = udecode(globals()[acn+str(i)+'_encoded'],s) * max_parcor_dec	# udecode: not implemented yet
+			globals()[acn+str(i)+'_decoded'] = udecode(globals()[acn+str(i)+'_encoded'],s) * max_parcor_dec
 
 		son = np.zeros((1,len(a_coeff_norm_1_decoded)))
 		for i in range(1,11,1):
-			iki = [globals()[acn+str(i)+'_decoded']
-			son = np.concatenate(son,iki)					# doğru axis olacak mı bilmiyorum, cmd'de 1,4lük matrixlerle denedim doğru oldu
+			iki = globals()[acn+str(i)+'_decoded']
+			son = np.concatenate(son,iki)		# doğru axis olacak mı bilmiyorum, cmd'de 1,4lük matrixlerle denedim doğru oldu
 		vec_len = son.shape[1]								
 								 
 		a_coeff_all_decoded = np.zeros((frame_length,vec_len))
 
 		son = np.zeros((1,len(a_coeff_norm_1_decoded)))
 		for i in range(1,11,1):
-			iki = [globals()[acn+str(i)+'_decoded']
-			son = np.concatenate(son,iki)					# doğru axis olacak mı bilmiyorum, cmd'de 1,4lük matrixlerle denedim doğru oldu
-		a_coeff_all_decoded[0:11,:] = son					# son[1:11] de aynı şey python'da, ama matlabda farklı
+			iki = globals()[acn+str(i)+'_decoded']
+			son = np.concatenate(son,iki)		# doğru axis olacak mı bilmiyorum, cmd'de 1,4lük matrixlerle denedim doğru oldu
+		a_coeff_all_decoded[0:11,:] = son		# son[1:11] de aynı şey python'da, ama matlabda farklı
 
 		parcor_all_decoded_vec = a_coeff_all_decoded.reshape(1, a_coeff_all_decoded.shape[0] * a_coeff_all_decoded.shape[1])
 
@@ -116,14 +115,14 @@ def LPC_rx_s(data_frame):
 
 		binary_pitch_plot_reshaped = binary_pitch_plot_single_dec.reshape(10,length_voiced_elements).T
 
-		binary_pitch_plot_decoded = bi2de(binary_pitch_plot_reshaped);
+		binary_pitch_plot_decoded = bi2de(binary_pitch_plot_reshaped)
 
 		pitch_unique_dec_dbl = np.double(pitch_unique_decoded)				# double np.double'a mı denk, kontrol et
-		binary_pitch_plot_decoded_mapped = pitch_unique_dec_dbl(binary_pitch_plot_decoded);
+		binary_pitch_plot_decoded_mapped = pitch_unique_dec_dbl(binary_pitch_plot_decoded)
 
-		binary_pitch_plot_decoded_mapped_rep = repelem(binary_pitch_plot_decoded_mapped,frame_length);
+		binary_pitch_plot_decoded_mapped_rep = repelem(binary_pitch_plot_decoded_mapped,frame_length)
 
-		synth_speech = f_DECODER (aCoeff_quant, binary_pitch_plot_decoded_mapped_rep, voiced, gain_elements_decoded);
+		synth_speech = f_DECODER (aCoeff_quant, binary_pitch_plot_decoded_mapped_rep, voiced, gain_elements_decoded)
 
 		#RESULTS,
 		# de2beep

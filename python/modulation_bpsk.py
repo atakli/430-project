@@ -3,13 +3,13 @@ from math import pi,floor
 import matplotlib.pyplot as plt
 from scipy.io.wavfile import write,read
 from auxiliary_module import filter,freq_resp
-# pip install sympy,opencv-python,sklearn,scikit-image,scikit-learn,pytube,PyQt4,PyQt5,Pillow,pandas,Kivy,jupyter,Cython
+# pip install Kivy jupyter
 def main():
 	# y_bytes = LPC_tx_s('den.wav')
 	Fs,y_den = read('den.wav')
 	y_den = y_den[:,0]
 	#result = filter(y_den,low=50,high=150,typ='bandpass')
-	write('den0.wav',Fs,y_den)
+	write('den0.wav',8000,y_den)
 	y_b = np.fromfile('den0.wav',dtype = "uint8")
 	y_bytes = np.unpackbits(y_b)
 	preamble = np.array([0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 0, 0, 0, 1, 0, 1, 0, 1,

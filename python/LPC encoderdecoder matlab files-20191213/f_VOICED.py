@@ -1,4 +1,6 @@
 # function_main of voiced/unvoiced detection
+from func_pitch import func_pitch
+from func_vd_zc import func_vd_zc
 from scipy.signal import lfilter
 def f_VOICED(x, fs, fsize):
 	# func_vd_msf, func_vd_pg, func_vd_zc is called in this m file
@@ -14,29 +16,31 @@ def f_VOICED(x, fs, fsize):
 	b = 1        										# index no. of starting data point of current frame
 	#  fsize = 30e-3;    # frame size
 	frame_length = round(fs * fsize)   					# number data points in each framesize of "x"
-	N = frame_length - 1        						# N+1 = frame length = number of data points in each framesize
-
+	N = frame_length	        						# N+1 = frame length = number of data points in each framesize
 	# FRAME SEGMENTATION:
-	for b in range(0, x.size - frame_length, frame_length):
-		y1 = x[b:b+N]     								# "b+N" denotes the end point of current frame.
-														# "y" denotes an array of the data points of the current frame
+	for b in range(0, len(x) - frame_length, frame_length):
+		pass
+	msf = np.zeros(b + N)
+	zc = np.zeros(b + N)
+	for b in range(0, len(x) - frame_length, frame_length):
+		y1 = x[b:b+N] # "b+N" denotes the end point of current frame. "y" denotes an array of the data points of the current frame
 		y = lfilter([1 -.9378], 1, y1)  					# pre-emphasis filter
 
-		msf [b : (b + N)] = func_vd_msf (y)
-		zc [b : (b + N)] = func_vd_zc (y)
-		pitch_plot [b : (b + N)] = func_pitch (y,fs)
+		msf [b : b + N] = func_vd_msf (y)
+		zc  [b : b + N] = func_vd_zc (y)
+		pitch_plot [b : (b + N)] = func_pitch (y,fs)		# sorunlu olabilir
 
 	thresh_msf = (( sum(msf) / msf.size - min(msf) ) * 0.67 ) + min(msf)
-	voiced_msf =  msf > thresh_msf     # =1,0										# BU NE?
-
+	voiced_msf =  msf > thresh_msf     # =1,0										# BU NE? heralde 1 veya 0 veriyo
+																					# yani değiştirmeye gerek yok gibi
 	thresh_zc = (( sum(zc) / zc.size - min(zc) ) * 1.5 ) + min(zc)
 	voiced_zc = zc < thresh_zc
 
 	thresh_pitch = (( sum(pitch_plot) / pitch_plot.size - min(pitch_plot)) * 0.5 ) + min(pitch_plot)
-	voiced_pitch =  pitch_plot > thresh_pitch
-
+	voiced_pitch =  np.pitch_plot > thresh_pitch
+	voiced = np.zeros(x.size - frame_length)
 	for b in range(0,x.size - frame_length):
-		if voiced_msf(b) * voiced_pitch(b) * voiced_zc(b) == 1:
+		if voiced_msf[b] * voiced_pitch[b] * voiced_zc[b] == 1:
 	#      if voiced_msf(b) + voiced_pitch(b) > 1,
 			voiced[b] = 1
 		else:

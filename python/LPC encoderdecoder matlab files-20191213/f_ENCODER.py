@@ -11,30 +11,31 @@ from func_lev_durb import func_lev_durb
 from f_GAIN import f_GAIN
 def f_ENCODER(x, fs, M):
 
-	if (nargin<3):
-		M = 10			   				# prediction order=10; 
+	# if (nargin<3):	M = 10			   				# prediction order=10; 
+	# bunu ben commentledim sonradan, çünkü nargin denen şeyle uğraşmak istemedim
 
 	# INITIALIZATION
 	b = 1			        			# index no. of starting data point of current frame
 	fsize = 30e-3					   	# frame size
 	frame_length = round(fs * fsize)   	# =number data points in each framesize of "x"
 	N = frame_length - 1         	  	# N+1 = frame length = number of data points in each framesize
-
+	print('SHAPE: ',x.shape)
+	print('LEN: ',len(x))
 	# VOICED/UNVOICED and PITCH     [independent of frame segmentation]
 	[voiced, pitch_plot] = f_VOICED (x, fs, fsize)
 
 	# FRAME SEGMENTATION for aCoeff and GAIN;
-	for b in range(0,x.size - frame_length,frame_length):
+	for b in range(0,len(x) - frame_length,frame_length):
 		y1 = x[b:b+N]     				# "b+N" denotes the end point of current frame.
 										# "y" denotes an array of the data points of the current frame
 		y = lfilter([1 -.9378], 1, y1)  	# pre-emphasis filtering										# bunu napcaz
 		# aCoeff [LEVINSON-DURBIN METHOD]
 		[k,a, tcount_of_aCoeff, e] = func_lev_durb (y, M) 		# e=error signal from lev-durb proc
-		aCoeff(b: (b + tcount_of_aCoeff - 1)) = a  				# aCoeff is array of "a" for whole "x"
-		parcor(b:(b + tcount_of_aCoeff - 1)) = k
+		aCoeff[b : b + tcount_of_aCoeff - 1] = a  				# aCoeff is array of "a" for whole "x"
+		parcor[b : b + tcount_of_aCoeff - 1] = k
 		# GAIN
-		pitch_plot_b = pitch_plot(b) 							# pitch period
-		voiced_b = voiced(b)
-		gain(b) = f_GAIN (e, voiced_b, pitch_plot_b)
+		pitch_plot_b = pitch_plot[b]							# pitch period
+		voiced_b = voiced[b]
+		gain[b] = f_GAIN (e, voiced_b, pitch_plot_b)
 	
 	return parcor, aCoeff, pitch_plot, voiced, gain
